@@ -1,3 +1,5 @@
+import time
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,6 +15,9 @@ DETAIL_LINK = "#accordion-29309a7a60-item-9ea8a10642"
 def parse_product(product):
     product_link = BASE_URL + product.find("a")["href"] + DETAIL_LINK
     driver.get(product_link)
+
+    time.sleep(0.25)
+
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "pdp-nutrition-summary")))
     soup = BeautifulSoup(driver.page_source, "html.parser")
 
@@ -30,7 +35,7 @@ def parse_product(product):
         nutrient_text = nutrient.find("span", class_="sr-only sr-only-pd").text.strip()
         nutrient_split = nutrient_text.split(" ")
         nutrient_value = nutrient_split[0].strip(':')
-        nutrient_name = nutrient_split[1]
+        nutrient_name = nutrient_split[1].strip()
         nutrition_data[nutrient_name] = nutrient_value
 
     for nutrient in secondary_nutrients.find_all("li"):
@@ -40,9 +45,16 @@ def parse_product(product):
         nutrition_data[nutrient_name] = nutrient_split[0]
 
     return {
-        "Назва": name,
-        "Опис": description,
-        **nutrition_data
+        "name": name,
+        "description": description,
+        "calories": nutrition_data.get('Калорійність', ''),
+        "fats": nutrition_data.get('Жири', ''),
+        "carbs": nutrition_data.get('Вуглеводи', ''),
+        "proteins": nutrition_data.get('Білки', ''),
+        "unsaturated_fats": nutrition_data.get('НЖК', ''),
+        "sugar": nutrition_data.get('Цукор', ''),
+        "salt": nutrition_data.get('Сіль', ''),
+        "portion": nutrition_data.get('Порція', '')
     }
 
 
