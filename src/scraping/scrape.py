@@ -35,7 +35,7 @@ def parse_product(product):
         nutrient_text = nutrient.find("span", class_="sr-only sr-only-pd").text.strip()
         nutrient_split = nutrient_text.split(" ")
         nutrient_value = nutrient_split[0].strip(':')
-        nutrient_name = nutrient_split[1]
+        nutrient_name = nutrient_split[1].strip()
         nutrition_data[nutrient_name] = nutrient_value
 
     for nutrient in secondary_nutrients.find_all("li"):
@@ -45,9 +45,16 @@ def parse_product(product):
         nutrition_data[nutrient_name] = nutrient_split[0]
 
     return {
-        "Назва": name,
-        "Опис": description,
-        **nutrition_data
+        "name": name,
+        "description": description,
+        "calories": nutrition_data.get('Калорійність', ''),
+        "fats": nutrition_data.get('Жири', ''),
+        "carbs": nutrition_data.get('Вуглеводи', ''),
+        "proteins": nutrition_data.get('Білки', ''),
+        "unsaturated_fats": nutrition_data.get('НЖК', ''),
+        "sugar": nutrition_data.get('Цукор', ''),
+        "salt": nutrition_data.get('Сіль', ''),
+        "portion": nutrition_data.get('Порція', '')
     }
 
 
