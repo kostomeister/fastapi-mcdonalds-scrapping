@@ -8,12 +8,12 @@ from src.products.schemas import Product
 products_router = APIRouter(prefix="/api/v1")
 
 
-@products_router.get("/all_products/")
+@products_router.get("/all_products/", response_model=List[Product])
 async def get_all_products(product_service=Depends(get_product_service)):
     return await product_service.get_all_products()
 
 
-@products_router.get("/products/{product_name}")
+@products_router.get("/products/{product_name}", response_model=Product)
 async def get_product_by_name(product_name: str, product_service=Depends(get_product_service)):
     return await product_service.get_product(product_name)
 
