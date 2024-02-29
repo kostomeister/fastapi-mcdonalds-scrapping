@@ -1,16 +1,18 @@
 import json
-from typing import Dict, List, Optional
+import urllib
+from typing import Dict, Optional
 
 
 class JSONRepository:
     def __init__(self, file_path: str) -> None:
         self.file_path = file_path
 
-    async def get_one(self, name: str) -> Optional[Dict[str, str]]:
+    async def get_one(self, name: str) -> str | None:
         data = await self._load_data()
-        for product_id, product_data in data.items():
-            if product_data.get('name', '').lower() == name.lower():
-                return {**product_data, "id": product_id}
+        name = urllib.parse.unquote(name)
+        for product_data in data:
+            if product_data.get('Назва', '').lower() == name.lower():
+                return product_data
         return None
 
     async def get_all(self) -> dict[str, dict]:
