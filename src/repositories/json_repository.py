@@ -11,7 +11,7 @@ class JSONRepository:
         data = await self._load_data()
         name = urllib.parse.unquote(name)
         for product_data in data:
-            if product_data.get('Назва', '').lower() == name.lower():
+            if product_data.get('name', '').lower() == name.lower():
                 return product_data
         return None
 
