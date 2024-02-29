@@ -10,6 +10,42 @@ FILE_PATH = "..\\..\\mcdonalds_menu.json"
 DETAIL_LINK = "#accordion-29309a7a60-item-9ea8a10642"
 
 
+def parse_product(product):
+    product_link = BASE_URL + product.find("a")["href"] + DETAIL_LINK
+    driver.get(product_link)
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "pdp-nutrition-summary")))
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+
+    main_info = soup.find("div", class_="cmp-product-details-main__right-rail")
+    nutrition_info = soup.find("div", id="pdp-nutrition-summary")
+
+    name = main_info.find("span", class_="cmp-product-details-main__heading-title").text.strip()
+    description = main_info.find("div", class_="cmp-text").text.strip()
+
+    nutrition_data = {}
+    primary_nutrients = nutrition_info.find("ul", class_="cmp-nutrition-summary__heading-primary")
+    secondary_nutrients = nutrition_info.find("div", class_="cmp-nutrition-summary__details-column-view-desktop").find("ul")
+
+    for nutrient in primary_nutrients.find_all("li"):
+        nutrient_text = nutrient.find("span", class_="sr-only sr-only-pd").text.strip()
+        nutrient_split = nutrient_text.split(" ")
+        nutrient_value = nutrient_split[0].strip(':')
+        nutrient_name = nutrient_split[1]
+        nutrition_data[nutrient_name] = nutrient_value
+
+    for nutrient in secondary_nutrients.find_all("li"):
+        nutrient_name = nutrient.find("span", class_="metric").text.strip().strip(':')
+        nutrient_value = nutrient.find("span", class_="value").find("span").text.strip()
+        nutrient_split = nutrient_value.split()
+        nutrition_data[nutrient_name] = nutrient_split[0]
+
+    return {
+        "Назва": name,
+        "Опис": description,
+        **nutrition_data
+    }
+
+
 def parse_page():
     driver.get(BASE_URL + "ua/uk-ua/eat/fullmenu.html")
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "cmp-category__item")))
@@ -18,7 +54,7 @@ def parse_page():
     products_data = []
 
     for product_soup in product_soups:
-        pass
+        products_data.append(parse_product(product_soup))
 
     with open(FILE_PATH, "w", encoding="utf-8") as f:
         json.dump(products_data, f, indent=4, ensure_ascii=False)
