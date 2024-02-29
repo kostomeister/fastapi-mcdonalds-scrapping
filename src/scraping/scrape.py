@@ -1,3 +1,5 @@
+import time
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,6 +15,9 @@ DETAIL_LINK = "#accordion-29309a7a60-item-9ea8a10642"
 def parse_product(product):
     product_link = BASE_URL + product.find("a")["href"] + DETAIL_LINK
     driver.get(product_link)
+
+    time.sleep(0.25)
+
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "pdp-nutrition-summary")))
     soup = BeautifulSoup(driver.page_source, "html.parser")
 
