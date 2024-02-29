@@ -6,7 +6,7 @@ from src.repositories.json_repository import JSONRepository
 
 class ProductService:
     def __init__(self, product_repo: JSONRepository) -> None:
-        self.product_repo: JSONRepository = product_repo("D:\\py_projects\\fastapi-mcdonalds-scrapping\\mcdonalds_menu.json")
+        self.product_repo: JSONRepository = product_repo("..\\..\\mcdonalds_menu.json")
 
     async def get_product(self, product_name: str) -> Optional[Dict[str, str]]:
         product = await self.product_repo.get_one(product_name)

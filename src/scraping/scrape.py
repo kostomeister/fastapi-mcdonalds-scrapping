@@ -73,6 +73,8 @@ def parse_page():
 
 
 if __name__ == "__main__":
-    driver = webdriver.Chrome()
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    driver = webdriver.Chrome(options=options)
     parse_page()
     driver.quit()
