@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from src.dependencies.get_product_service import get_product_service
 from src.products.schemas import Product
 
-products_router = APIRouter()
+products_router = APIRouter(prefix="/api/v1")
 
 
 @products_router.get("/all_products/")
