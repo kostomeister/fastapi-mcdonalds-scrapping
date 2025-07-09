@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from src.products.routers import products_router
+from src.api.routes import router
 
 app = FastAPI(description="McDonalds Scrapping")
 
-app.include_router(products_router)
+app.include_router(router)
