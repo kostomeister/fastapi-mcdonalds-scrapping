@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class Product(BaseModel):
+class ProductDTO(BaseModel):
     name: str
     description: str
     calories: str

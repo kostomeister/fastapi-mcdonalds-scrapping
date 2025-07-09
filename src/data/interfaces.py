@@ -1,0 +1,6 @@
+from typing import Protocol, List, Dict
+
+
+class IProductRepository(Protocol):
+    async def read_all(self) -> List[Dict]: ...
+    async def write_all(self, data: List[Dict]) -> None: ...

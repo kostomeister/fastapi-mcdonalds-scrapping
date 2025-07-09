@@ -1,0 +1,9 @@
+from typing import Protocol, List
+
+from src.api.schemas import ProductDTO
+
+
+class IProductService(Protocol):
+    async def list_all(self) -> List[ProductDTO]: ...
+    async def by_name(self, name: str) -> ProductDTO: ...
+    async def field(self, name: str, field: str) -> str: ...
